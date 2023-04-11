@@ -68,6 +68,7 @@ const downloadExpenses = async(req,res) => {
 
     const fileUrl = await S3Service.uploadToS3(stringifiedExpenses, fileName);
     
+    
     await downloadedFile.create({userId: req.user.id, url: fileUrl});
 
     res.status(200).json({fileUrl, success: true});

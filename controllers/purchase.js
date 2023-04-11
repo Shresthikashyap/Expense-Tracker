@@ -5,15 +5,13 @@ const sequelize = require('../util/database');
 const purchasePremium = async(req,res)=>{
    const t = await sequelize.transaction();
    try{
-    console.log('1 ***************')
     var rzp = new Razorpay({
       key_id: 'rzp_test_aypy6xxrnAbUXy',
       key_secret: 'HSqnGr3S5gbuftikUQcFAnHd'
     })
     
     const amount = 2000;
-    console.log('2 ***************')
-
+    
     rzp.orders.create({ amount, currency: "INR" }, async (err, order) => {
        if (err) {
          throw new Error(JSON.stringify(err));

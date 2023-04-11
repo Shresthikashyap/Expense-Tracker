@@ -3,7 +3,7 @@ const User = require('../models/user')
 
 const getAllFiles = async (req, res, next) => {
     try {
-        console.log('********************** here')
+        
         if (req.user.isPremium) {
             const allDownloads= await DownloadedFile.findAll({where:{userId:req.user.id}});
             const urls = allDownloads.map(download => download.url);

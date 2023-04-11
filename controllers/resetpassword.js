@@ -12,7 +12,7 @@ const forgotpassword = async (req, res) => {
 
         const client = Sib.ApiClient.instance;
         const apiKey = client.authentications['api-key'];
-        apiKey.apiKey = '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';
+        apiKey.apiKey = process.env.API_KEY;
         const transEmailApi = new Sib.TransactionalEmailsApi();
         
         const { email } =  req.body;
@@ -24,12 +24,10 @@ const forgotpassword = async (req, res) => {
             if (!validator.isEmail(email.toLowerCase())) {
                     return res.status(400).json({ error: 'Invalid email address' });
             }
-             console.log('******************************',id);
+             
             const sender = {email:'anjaliradcliffe7@gmail.com'};
             const receiver = [{ email }];
 
-            //sgMail.setApiKey('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')
-            //console.log('****************************id',id)
             const msg = {
                 sender,
                 to: receiver,
@@ -37,31 +35,23 @@ const forgotpassword = async (req, res) => {
                 textContent: 'We received a request to reset the password for your account. Please follow the link below to reset your password:',
                 htmlContent: `<p>Hello,</p>
                 <p>We received a request to reset the password for your account. Please follow the link below to reset your password:</p>
-                <p><a href="http://localhost:3000/password/resetpassword/${id}">Reset Password</a></p><p>If you did not request this password reset, please ignore this email and contact us immediately.</p><p>Thank you,
+                <p><a href="http://13.50.99.50/password/resetpassword/${id}">Reset Password</a></p><p>If you did not request this password reset, please ignore this email and contact us immediately.</p><p>Thank you,
                 </p><p>Expensify</p>`
             }
-            
-            
-            // sgMail
-            // .send(msg,(err=>{
-            //      console.log('here*************',err)
-            // }))
+ 
             const response = transEmailApi.sendTransacEmail(msg)
             .then((response) => {
 
-                // console.log(response[0].statusCode)
-                // console.log(response[0].headers)
-                return res.status(response[0].statusCode).json({message: 'Link to reset password sent to your mail ', success: true})
-
+                return res.status(response[0].statusCode).json({message: 'Link to reset password sent to your mail ', success: true});
             })
             .catch((error) => {
                 console.log(error)
                 throw new Error(error);
             })
-
-            //send mail
+            
+            console.log(response);
         }else {
-            throw new Error('User doesnt exist')
+            throw new Error(`User doesn't exist`)
         }
     } catch(err){
         console.error(err)
@@ -118,7 +108,7 @@ const updatepassword = (req, res) => {
                                 throw new Error(err);
                             }
                             user.update({ password: hash }).then(() => {
-                                res.status(201).json({message: 'Successfuly update the new password'})
+                                res.status(201).json({message: 'Successfully update the new password'})
                             })
                         });
                     });

@@ -41,6 +41,7 @@ app.use(cors());
 app.use(helmet());
 app.use(compression());
 app.use(morgan('combined',{stream : accessLogStream}));
+app.use(express.static('public'));
 
 app.use('/users',userRoutes);
 
@@ -53,6 +54,11 @@ app.use('/password',resetPasswordRoutes);
 app.use('/download',downloadRoutes);
 app.use('/downloadedFiles',allDownloadedFiles);
 app.use('*',errorController.get404);
+app.use((req,res) => {
+    console.log('Request url ',req.url);
+    console.log('request is successful')
+    res.sendFile(path.join(_dirname,`public/${req.url}`));
+})
 
 User.hasMany(Expense);
 Expense.belongsTo(User);

@@ -20,6 +20,7 @@ const uploadToS3=(data,filename)=>{
         return new Promise((resolve,reject)=>{
 
             s3bucket.upload(params,(err,s3response)=>{
+                console.log('inside ')
                 if(err){
                     console.log('Something went wrong') 
                     console.log(err)
