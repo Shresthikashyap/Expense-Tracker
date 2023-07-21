@@ -65,8 +65,6 @@ th,td{
 }
 
 
-
-
 </style>
 </head>
 <body>
@@ -104,12 +102,10 @@ th,td{
               <button type="submit" class="btn btn-success btn-md" >Add Expense</button>
             </div>
           </div>
-          <div class="col">
-              <br>
-            <button type="submit" class="btn btn-primary btn-md" onclick="logOut()">Log out</button>
-        </div>
           </div>
         </form>
+        <button class="btn btn-primary" onclick="logOut()" style="position: fixed; top: 15px; right: 15px;">Log Out</button>       
+
               <div class="tracker">
                <h3> Expenses :  <div onclick="download()" id="downloadexpense"></div>
                                 <div onclick="downloadedFiles()" id="downloadedFiles"></div></h3>

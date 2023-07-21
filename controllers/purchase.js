@@ -16,7 +16,7 @@ const purchasePremium = async(req,res)=>{
        if (err) {
          throw new Error(JSON.stringify(err));
        }
-
+       console.log('**********************',order.id);
        await req.user.createOrder({ orderId: order.id, status: "PENDING" }, { transaction: t });
        await t.commit();
        return res.status(201).json({ order, key_id: rzp.key_id });

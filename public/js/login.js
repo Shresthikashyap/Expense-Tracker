@@ -9,7 +9,7 @@ const save = async (event) => {
         email,password
         }
         
-        let response = await axios.post("http://13.50.99.50/users/login",obj);
+        let response = await axios.post("http://13.51.197.130/users/login",obj);
 
         localStorage.setItem('token',response.data.token)
  

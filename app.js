@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const express = require('express');
 const bodyParser = require('body-parser'); 
-const helmet = require('helmet');
+//const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
 
@@ -38,7 +38,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(cors()); 
-app.use(helmet());
+//app.use(helmet());
 app.use(compression());
 app.use(morgan('combined',{stream : accessLogStream}));
 app.use(express.static('public'));
