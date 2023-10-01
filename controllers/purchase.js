@@ -6,8 +6,8 @@ const purchasePremium = async(req,res)=>{
    const t = await sequelize.transaction();
    try{
     var rzp = new Razorpay({
-      key_id: 'rzp_test_aypy6xxrnAbUXy',
-      key_secret: 'HSqnGr3S5gbuftikUQcFAnHd'
+      key_id: process.env.RAZORPAY_KEY_ID,
+      key_secret: process.env.RAZORPAY_KEY_SECRET
     })
     
     const amount = 2000;
@@ -16,7 +16,7 @@ const purchasePremium = async(req,res)=>{
        if (err) {
          throw new Error(JSON.stringify(err));
        }
-
+       console.log('**********************',order.id);
        await req.user.createOrder({ orderId: order.id, status: "PENDING" }, { transaction: t });
        await t.commit();
        return res.status(201).json({ order, key_id: rzp.key_id });
@@ -31,11 +31,11 @@ const purchasePremium = async(req,res)=>{
 const updateTransactionStatus = async(req,res)=>{
    const t = await sequelize.transaction();
    try{
-
+    
     const {payment_id,order_id} = req.body; 
     const id = req.user.id;
     const Promise1 = await Order.create({ orderid: order_id , paymentid: payment_id,status : 'successful'},{transaction: t});
-
+    
     //const Promise1 = order.update({ paymentid: payment_id, status: 'successful' });
     
     const Promise2 = await req.user.update({isPremium: true},{ transaction: t });

@@ -1,5 +1,4 @@
 const DownloadedFile = require('../models/downloadedFile')
-const User = require('../models/user')
 
 const getAllFiles = async (req, res, next) => {
     try {

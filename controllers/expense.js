@@ -4,7 +4,6 @@ const downloadedFile = require('../models/downloadedFile');
 const S3Service = require('../services/S3services')
 const UserServices = require('../services/userservices')
 const sequelize = require('../util/database');
-//const AWS = require('aws-sdk');
 
 /************   Add Expense   **********/
 const addExpense = async(req, res) => {
@@ -18,7 +17,6 @@ const addExpense = async(req, res) => {
        return res.status(400).json({success:false, message:'parameter missing'})
     }
    
-    //const user = await User.findByPk(req.user.id);
     let expense = await Expense.create({ cost: cost, description: desc, category: cat, userId: req.user.id},{transaction:t});
     const totalExpense = Number(req.user.totalExpense) + Number(cost);
     
@@ -91,10 +89,14 @@ const updateExpense = async(req,res) =>{
     }
 
     const expense = await Expense.findByPk(id);
-    //await expense.destroy({ where: { id:id,userId: req.user.id }});
     const {cost, desc, cat } = req.body;  
 
+    const updatedExpense = Number(req.user.totalExpense) - Number(expense.cost); 
+    const totalExpense = Number(updatedExpense) + Number(cost);
+    await User.update({totalExpense:totalExpense},{where: {id: req.user.id}, transaction:t})
+
     const updatedExpenseDetail = await expense.update({ cost:cost, description:desc, category:cat},{transaction:t}); 
+
     await t.commit();
 
     res.status(201).json({ expense : updatedExpenseDetail });
@@ -111,7 +113,7 @@ const deleteExpense = async(req, res) => {
   const t = await sequelize.transaction();
   try {
     const id = req.params.id;
-    const {cost} = req.body; 
+    //const {cost} = req.body; 
 
     if (id=='undefined') {
       console.log('ID is missing');
@@ -122,14 +124,20 @@ const deleteExpense = async(req, res) => {
    
     if (!expense) {  
       return res.status(404).json({ err: 'Expense not found' });  
-    }  
-   
-    await expense.destroy({ where: { id: id, userId: req.user.id },transaction:t});
-
-    const totalExpense = Number(req.user.totalExpense) - Number(cost);
+    } 
+    console.log(expense.cost)
     
-    await User.update({totalExpense:totalExpense},{where: {id: req.user.id}, transaction:t})
+    const totalExpense = Number(req.user.totalExpense) - Number(expense.cost);
+    console.log('======>',req.user.totalExpense, ' ',expense.cost)
+   
+    await expense.destroy({ where: { id: id},transaction:t});
+    
+    if(totalExpense >= 0){
+      await User.update({totalExpense:totalExpense},{where: {id: req.user.id}, transaction:t})
+    }
+    
     await t.commit();
+    
     res.status(200).json({ success:true });
   } 
   catch (err) {

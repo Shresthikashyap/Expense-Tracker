@@ -8,7 +8,7 @@ const authenticate = async(req,res,next) => {
        
         const token = await req.header('Authorization');
         
-        const user =  jwt.verify(token,'mySecretKey',(err, decoded) => {
+        const user =  jwt.verify(token,process.env.TOKEN_SECRET,(err, decoded) => {
             if (err) {
               console.log(err);
             } else {
@@ -17,8 +17,8 @@ const authenticate = async(req,res,next) => {
           });
         
         await User.findByPk(user.id).then((user)=>{
+          
            req.user = user;
-        
            next();
         })
     }

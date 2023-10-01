@@ -23,6 +23,8 @@ const leaderBoard = async(req,res) => {
       },{transaction:t}); 
 
       await t.commit();
+
+      console.log('yyyyyy',leaderboardofuser);
       
       res.status(200).json({leaderboardofuser, success: true});
     }
